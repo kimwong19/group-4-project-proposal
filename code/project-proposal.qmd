@@ -210,3 +210,32 @@ DO_taxa_plot <- ggplot(data = DO_taxa, # assigns plot to object do_taxa_plot
 # shows plot
 DO_taxa_plot
 ```
+
+# Figure 2: Variance of DO across sights
+```{r}
+# base layer
+DO <- ggplot(data = aq_ins_clean,
+       # x-axis: site
+       # y-axis: mean salinity
+       mapping = aes(x = site_full,
+                     y = med_do)) +
+  # first layer: salinity measurements at each survey
+  geom_jitter(height = 0,
+              width = 0.1,
+              shape = 21) +
+  # wrapping x-axis text
+  scale_x_discrete(labels = label_wrap(width = 15)) +
+  # second layer: points to represent means
+  stat_summary(fun = median,
+               color = "red",
+               size = 1) +
+  # relabelling x- and y-axes
+  labs(x = "Site",
+       y = "Median DO (mh/L)",
+       title = "Site DO levels") +
+  # different theme
+  theme_bw()
+# show plot
+DO
+```
+
