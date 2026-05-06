@@ -26,7 +26,7 @@ Note:
 Stella Freedberg, Kimberly Wong, Sami Gibson
 
 ## Group name:
-[delete this line and enter your names here]
+Invertebrates & Dissolved oxygen
 
 ## Topic information and question
 **Topic:** Aquatic invertebrates
@@ -51,23 +51,23 @@ Stella Freedberg, Kimberly Wong, Sami Gibson
 ## Figures
 **Potential figure 1:**
 
-[delete this line and enter your figure here]
+Abundance vs. DO
 
 **Potential figure 2:**
 
-[delete this line and enter your figure here; if you don't have one, delete the entire section]
+Invertebrate abundance vs. Site
 
 **Potential figure 3:**
 
-[delete this line and enter your figure here; if you don't have one, delete the entire section]
+DO vs. Site
 
 **Potential figure 4**
 
-[delete this line and enter your figure here; if you don't have one, delete the entire section]
+Abundance over time
 
 ## Data cleaning/wrangling/summarizing plan
 
-[delete this line and enter your own text here]
+To clean the data, we will filter to only include quarterly surveys at NCOS and filtered beaker samples, select columns of interest, clean column names, remove outliers, and join data frames. Our data summarizing steps will include calculating median dissolved oxygen levels and average abundance per liter.  
 
 ## Project roles
 
@@ -83,16 +83,16 @@ Stella Freedberg, Kimberly Wong, Sami Gibson
 
 **Elective idea:**
 
-[delete this line and enter your own text here]
+We are planning to make a collage using water color and microscope images of invertebrates to visualize our data.
 
 **Elective timeline**:
 
-Week 7: enter your own text here
+Week 7: have set plan of what we want to visualize
 
-Week 8 (timeline check in): enter your own text here
+Week 8 (timeline check in): begin assembling project 
 
-Week 9: enter your own text here
+Week 9: assemble the project + practice presentation
 
-Week 10: enter your own text here
+Week 10: finishing touches + present
 
-Finals week: enter your own text here
+Finals week: n/a
