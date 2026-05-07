@@ -69,7 +69,7 @@ DO vs. Site
 
 Abundance over time
 
-
+<img width="1474" height="1604" alt="abundance_time_plot" src="https://github.com/user-attachments/assets/98b06166-f8f6-486b-8b22-1bfdd99b2a9e" />
 
 ## Data cleaning/wrangling/summarizing plan
 
