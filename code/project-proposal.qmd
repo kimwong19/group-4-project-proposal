@@ -275,4 +275,55 @@ abundance <- ggplot(data = abundance_by_site,
 
 abundance
 ```
+# Figure 4: Abundance over time
+
+```{r}
+#| label: invert-abundance-time
+#| fig-width: 10
+#| fig-height: 8
+
+# create object for plotting abundance over time
+abundance_time <- aq_ins_clean |> 
+  # create log-transformed abundance column
+  mutate(log_ave_lit = log(ave_lit + 1)) |> 
+  # make taxon names easier to read
+  mutate(taxon = str_replace_all(taxon, "_", " "),
+         taxon = str_to_title(taxon)) |> 
+  # order taxa by maximum abundance
+  mutate(taxon = fct_reorder(taxon, ave_lit, .fun = max, .desc = TRUE)) |>
+  filter(taxon %in% c("Ostracod", "Copepod", 'Cladocera', 
+                      'Hemiptera Corixidae Boatman', 'Nematode'))
+
+# base layer
+abundance_time_plot <- ggplot(data = abundance_time,
+                              # x-axis: sampling date
+                              # y-axis: log-transformed abundance
+                              # color by site
+                              mapping = aes(x = date,
+                                            y = log_ave_lit,
+                                            color = site_full)) +
+  # points show individual abundance measurements
+  geom_point(size = 2,
+             alpha = 0.7) +
+  # lines connect observations through time by site and taxon
+  geom_line(mapping = aes(group = site_full),
+            alpha = 0.6) +
+  # separate panels for each taxon
+  facet_wrap(~ taxon, scales = "free_y") +
+  # wrap site names in legend
+  scale_color_viridis_d(labels = label_wrap(width = 20)) +
+  # relabel axes and add title
+  labs(x = "Date",
+       y = "log + 1 transformed average abundance/L",
+       color = "Site",
+       title = "Invertebrate abundance over time") +
+  # use clean theme
+  theme_bw() +
+  # angle x-axis labels so dates are readable
+  theme(axis.text.x = element_text(angle = 45,
+                                   hjust = 1))
+
+# show plot
+abundance_time_plot
+```
 
