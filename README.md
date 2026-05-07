@@ -62,11 +62,13 @@ Invertebrate abundance vs. Site
 **Potential figure 3:**
 
 DO vs. Site
-<img width="706" height="467" alt="DO_vs_Abundance" src="https://github.com/user-attachments/assets/702a02d2-2330-4eea-8ec5-f4967e1f463c" />
+<img width="703" height="473" alt="DO_levles_by site" src="https://github.com/user-attachments/assets/6f749a4f-bf59-4362-a40b-0bf4ced0681e" />
+
 
 **Potential figure 4**
 
 Abundance over time
+
 
 
 ## Data cleaning/wrangling/summarizing plan
@@ -92,7 +94,7 @@ We are planning to make a collage using water color and microscope images of inv
 - Water color bubbles/ blow colored bubbles with watercolor around each to demonstrate how much dissolved oxygen each likes 
     - More bubbles = likes more DO
     - Less bubbles = likes less DO
-
+<img width="703" height="287" alt="Screenshot 2026-05-06 at 6 59 23 PM" src="https://github.com/user-attachments/assets/842d70d9-9b74-4e5f-b167-0787fa86b987" />
 
 **Elective timeline**:
 
