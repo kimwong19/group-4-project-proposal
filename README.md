@@ -52,19 +52,22 @@ Invertebrates & Dissolved oxygen
 **Potential figure 1:**
 
 Abundance vs. DO
-
+<img width="706" height="467" alt="DO_vs_Abundance" src="https://github.com/user-attachments/assets/a28cf695-ee85-4d25-a615-96f4411e1821" />
 
 **Potential figure 2:**
 
 Invertebrate abundance vs. Site
+<img width="738" height="465" alt="Aquatic_Invert _Abundance_Across_Sites" src="https://github.com/user-attachments/assets/4ab8f8fe-bf36-4203-bb81-3d56dae53537" />
 
 **Potential figure 3:**
 
 DO vs. Site
+<img width="706" height="467" alt="DO_vs_Abundance" src="https://github.com/user-attachments/assets/702a02d2-2330-4eea-8ec5-f4967e1f463c" />
 
 **Potential figure 4**
 
 Abundance over time
+
 
 ## Data cleaning/wrangling/summarizing plan
 
@@ -85,6 +88,11 @@ To clean the data, we will filter to only include quarterly surveys at NCOS and 
 **Elective idea:**
 
 We are planning to make a collage using water color and microscope images of invertebrates to visualize our data.
+- add microscopic images of each of the 5 main inverts 
+- Water color bubbles/ blow colored bubbles with watercolor around each to demonstrate how much dissolved oxygen each likes 
+    - More bubbles = likes more DO
+    - Less bubbles = likes less DO
+
 
 **Elective timeline**:
 
