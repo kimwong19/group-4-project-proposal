@@ -158,6 +158,15 @@ aq_ins_clean <- aq_ins |>
          site_full = fct_rev(site_full))
 ```
 
+## Focus Taxa
+```{r}
+#| label: focus_taxa
+# taxa to include in all figures
+focus_taxa <- c("Ostracod", "Copepod", "Cladocera", 
+                "Hemiptera Corixidae Boatman", "Nematode")
+```
+
+
 # Figure 1: Invertebrate abundance as a function of DO
 ```{r}
 #| label: wrangle_data
@@ -170,6 +179,8 @@ DO_taxa <- aq_ins_clean |>
   mutate(log_ave_lit = log(ave_lit + 1)) |>
   # mutates to title-case taxon names
   mutate(taxon = str_replace_all(taxon, "_", " "), taxon = str_to_title(taxon)) |>
+  # only include focus taxa
+  filter(taxon %in% focus_taxa) |> 
   # order taxon levels by maximum average abundance per liter
   mutate(taxon = fct_reorder(taxon, ave_lit, .fun = max, .desc = TRUE)) |> 
   # keep only the columns needed for the figure
@@ -210,6 +221,7 @@ DO_taxa_plot
 
 # Figure 2: Variance of DO across sights
 ```{r}
+#| label: figure 2
 # base layer
 DO <- ggplot(data = aq_ins_clean,
        # x-axis: site
@@ -238,6 +250,7 @@ DO
 
 # Figure 3: Aquatic Invert. Abundance Across Sites
 ```{r}
+#| label: cleanign for figure 3
 # creating new object from clean aquatic inverts 
 abundance_by_site <- aq_ins_clean |> 
   # group by taxon, site
@@ -250,6 +263,7 @@ abundance_by_site <- aq_ins_clean |>
 #| fig-width: 10
 #| fig-height: 8
 # base layer
+
 abundance <- ggplot(data = abundance_by_site,
                    # x-axis: site
                    # y-axis: mean abundance/L
@@ -282,45 +296,51 @@ abundance
 #| fig-width: 10
 #| fig-height: 8
 
-# create object for plotting abundance over time
+# create object for plotting total abundance over time
 abundance_time <- aq_ins_clean |> 
-  # create log-transformed abundance column
-  mutate(log_ave_lit = log(ave_lit + 1)) |> 
+  # group by sampling date and taxon
+  group_by(date, taxon) |> 
+  # total abundance across all sites for each date and taxon
+  summarize(total_ave_lit = sum(ave_lit, na.rm = TRUE)) |> 
+  # ungroup data frame
+  ungroup() |> 
+  # create log-transformed total abundance column
+  mutate(log_total_ave_lit = log(total_ave_lit + 1)) |> 
   # make taxon names easier to read
   mutate(taxon = str_replace_all(taxon, "_", " "),
          taxon = str_to_title(taxon)) |> 
-  # order taxa by maximum abundance
-  mutate(taxon = fct_reorder(taxon, ave_lit, .fun = max, .desc = TRUE)) |>
+  # order taxa by maximum total abundance
+  mutate(taxon = fct_reorder(taxon, total_ave_lit, .fun = max, .desc = TRUE)) |>
+  # include main taxon groups of focus
   filter(taxon %in% c("Ostracod", "Copepod", 'Cladocera', 
                       'Hemiptera Corixidae Boatman', 'Nematode'))
 
 # base layer
 abundance_time_plot <- ggplot(data = abundance_time,
                               # x-axis: sampling date
-                              # y-axis: log-transformed abundance
-                              # color by site
+                              # y-axis: total log-transformed abundance
                               mapping = aes(x = date,
-                                            y = log_ave_lit,
-                                            color = site_full)) +
-  # points show individual abundance measurements
+                                            y = log_total_ave_lit,
+                                            color = taxon)) +
+  # points show total abundance on each sampling date
   geom_point(size = 2,
              alpha = 0.7) +
-  # lines connect observations through time by site and taxon
-  geom_line(mapping = aes(group = site_full),
-            alpha = 0.6) +
+  # lines connect total abundance through time for each taxon
+  geom_line(linewidth = 0.8,
+            alpha = 0.7) +
   # separate panels for each taxon
   facet_wrap(~ taxon, scales = "free_y") +
-  # wrap site names in legend
-  scale_color_viridis_d(labels = label_wrap(width = 20)) +
+  # use non-default colors
+  scale_color_viridis_d() +
   # relabel axes and add title
   labs(x = "Date",
-       y = "log + 1 transformed average abundance/L",
-       color = "Site",
-       title = "Invertebrate abundance over time") +
+       y = "log + 1 transformed total average abundance/L across sites",
+       title = "Total invertebrate abundance over time") +
   # use clean theme
   theme_bw() +
-  # angle x-axis labels so dates are readable
-  theme(axis.text.x = element_text(angle = 45,
+  # remove redundant legend
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45,
                                    hjust = 1))
 
 # show plot
