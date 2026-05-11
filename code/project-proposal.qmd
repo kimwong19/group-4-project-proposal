@@ -264,12 +264,17 @@ DO
 # Figure 3: Aquatic Invert. Abundance Across Sites
 ```{r}
 #| label: cleanign for figure 3
+#| message: false
+#| warning: false
 # creating new object from clean aquatic inverts 
 abundance_by_site <- aq_ins_clean |> 
-  # group by taxon, site
-  group_by(taxon, site) |>
   # log + 1 transform mean abundance per liter
-  mutate(log_ave_lit = log(ave_lit + 1)) 
+  mutate(log_ave_lit = log(ave_lit + 1)) |>
+  # convert taxon to title case
+  mutate(taxon = str_replace_all(taxon, "_", " "),
+         taxon = str_to_title(taxon)) |> 
+  # filter to include taxa of interest
+  filter(taxon %in% focus_taxa)
 ```
 
 ```{r}
@@ -284,21 +289,25 @@ abundance <- ggplot(data = abundance_by_site,
                    mapping = aes(x = site_full,
                                  y = log_ave_lit, 
                                  color = taxon)) +
-  # first layer: points to represent observations
-  geom_point() +
-  # second layer: points to represent medians
-  #stat_summary(geom = "point",
-               #fun = "median",
-               #size = 4,
-               #color = "blue") +
+  # first layer: jitter points to represent observations
+  geom_jitter(width = 0.15,
+              height = 0,
+              alpha = 0.7) +
+  # facet by taxon
+  facet_wrap(~ taxon) +
   # wrapping x-axis text
   scale_x_discrete(labels = label_wrap(15)) +
+  # non-default colors
+  scale_color_viridis_d() +
   # relabelling x- and y-axis, adding title
   labs(x = "Site",
        y = "log + 1 transformed average abundance/L",
        title = "Aquatic Invert. Abundance Across Sites") +
-  # different theme
-  theme_bw()
+  theme_bw() +
+  # remove legend
+  theme(legend.position = 'none',
+        # fix x-axis for readability
+        axis.text.x = element_text(angle = 45, hjust = 1)) 
 
 abundance
 ```
