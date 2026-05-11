@@ -334,30 +334,27 @@ abundance_time <- aq_ins_clean |>
   # order taxa by maximum total abundance
   mutate(taxon = fct_reorder(taxon, total_ave_lit, .fun = max, .desc = TRUE)) |>
   # include main taxon groups of focus
-  filter(taxon %in% c("Ostracod", "Copepod", 'Cladocera', 
-                      'Hemiptera Corixidae Boatman', 'Nematode'))
+  filter(taxon %in% focus_taxa) 
+
 
 # base layer
 abundance_time_plot <- ggplot(data = abundance_time,
-                              # x-axis: sampling date
-                              # y-axis: total log-transformed abundance
-                              mapping = aes(x = date,
-                                            y = log_total_ave_lit,
+                              # x-axis: log_total_ave_lit
+                              # fill and color by taxon
+                              mapping = aes(x = log_total_ave_lit,
+                                            fill = taxon,
                                             color = taxon)) +
-  # points show total abundance on each sampling date
-  geom_point(size = 2,
-             alpha = 0.7) +
-  # lines connect total abundance through time for each taxon
-  geom_line(linewidth = 0.8,
-            alpha = 0.7) +
-  # separate panels for each taxon
-  facet_wrap(~ taxon, scales = "free_y") +
-  # use non-default colors
-  scale_color_viridis_d() +
-  # relabel axes and add title
-  labs(x = "Date",
-       y = "log + 1 transformed total average abundance/L across sites",
-       title = "Total invertebrate abundance over time") +
+  # scaled density makes y-axis consistent across facets
+  geom_density(aes(y = after_stat(scaled)),
+               alpha = 0.45,
+               linewidth = 0.8,
+               adjust = 0.8) +
+  facet_wrap(~ taxon) + # facet by taxon
+  scale_fill_viridis_d() + # non-default colors
+  scale_color_viridis_d() + # non-default colors
+  labs(x = "log + 1 transformed total average abundance/L across sites",
+       y = "Scaled density",
+       title = "Distribution of total invertebrate abundance over time") +
   # use clean theme
   theme_bw() +
   # remove redundant legend
