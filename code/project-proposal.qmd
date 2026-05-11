@@ -221,17 +221,30 @@ DO_taxa_plot
 
 # Figure 2: Variance of DO across sights
 ```{r}
-#| label: figure 2
+#| fig-width: 10
+#| fig-height: 8
+# create object aq_ins_clean_fig2 from aq_ins_clean
+aq_ins_clean_fig2 <-  aq_ins_clean |>
+  # convert taxon to title case
+  mutate(taxon = str_replace_all(taxon, "_", " "),
+         taxon = str_to_title(taxon)) |> 
+  # filter to include focus taxa
+  filter(taxon %in% focus_taxa)
+
 # base layer
-DO <- ggplot(data = aq_ins_clean,
+DO <- ggplot(data = aq_ins_clean_fig2,
        # x-axis: site
        # y-axis: mean salinity
        mapping = aes(x = site_full,
                      y = med_do)) +
-  # first layer: salinity measurements at each survey
+  # first layer: boxplot
+  geom_boxplot(width = 0.35,
+               outlier.shape = NA) +
+  # second layer: salinity measurements at each survey
   geom_jitter(height = 0,
-              width = 0.1,
-              shape = 21) +
+              width = 0.12,
+              shape = 21,
+              alpha = 0.6) +
   # wrapping x-axis text
   scale_x_discrete(labels = label_wrap(width = 15)) +
   # second layer: points to represent means
