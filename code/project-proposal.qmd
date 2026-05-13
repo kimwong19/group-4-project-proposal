@@ -221,6 +221,7 @@ DO_taxa_plot <- ggplot(data = DO_taxa, # assigns plot to object do_taxa_plot
 
 # shows plot
 DO_taxa_plot
+
 ```
 shows that individual taxa have noisy, weak, or inconsistent relationships with DO.
 
@@ -229,6 +230,9 @@ shows that individual taxa have noisy, weak, or inconsistent relationships with 
 ```{r}
 #| fig-width: 10
 #| fig-height: 8
+
+library(ggpointdensity) 
+
 # create object aq_ins_clean_fig2 from aq_ins_clean
 aq_ins_clean_fig2 <-  aq_ins_clean |>
   # convert taxon to title case
@@ -263,8 +267,45 @@ DO <- ggplot(data = aq_ins_clean_fig2,
        title = "Site DO levels") +
   # different theme
   theme_bw()
+
 # show plot
 DO
+
+# assign quartiles for medians for each site
+median_fig2$quartile <- cut(median_fig2$median_DO,
+                   breaks = quantile(median_fig2$median_DO,
+                                     probs = seq(0, 1, 0.25)),
+                   include.lowest = TRUE,
+                   labels = c("Q1","Q2","Q3","Q4"))
+
+# boundaries of quartiles
+q <- quantile(median_fig2$median_DO, probs = c(0.25, 0.5, 0.75))
+
+# distribution plot of DO levels across sites
+ggplot(median_fig2, aes(x = median_DO)) +
+  # density curve
+  geom_density(fill = "lightblue",
+               alpha = 0.4,
+               color = "blue",
+               linewidth = 1.2) +
+  # vertical quartile lines
+  geom_vline(xintercept = q,
+             linetype = "dashed",
+             color = "gray40") +
+  # site labels
+  geom_text(aes(y = -0.03,
+                label = site_full,
+                color = quartile),
+            hjust = 1,
+            size = 4) +
+  # axes labels and title
+  labs(x = "Median Dissolved Oxygen (mg/L)",
+       y = "Density",
+       title = "Distribution of Median Dissolved Oxygen Aross Sites") +
+  # theme
+  theme_bw()
+
+
 ```
 
 # Figure 3: Aquatic Invert. Abundance Across Sites
