@@ -222,6 +222,8 @@ DO_taxa_plot <- ggplot(data = DO_taxa, # assigns plot to object do_taxa_plot
 # shows plot
 DO_taxa_plot
 ```
+shows that individual taxa have noisy, weak, or inconsistent relationships with DO.
+
 
 # Figure 2: Variance of DO across sights
 ```{r}
@@ -442,7 +444,10 @@ ggplot(total_abundance,
   geom_point(color = "magenta3",
              size = 3,
              alpha = 0.7) +
-  
+   geom_smooth(method = "lm",
+              se = TRUE,
+              color = "purple4",
+              fill = "cyan2") +
   
   labs(
     x = "Dissolved oxygen (mg/L)",
@@ -452,6 +457,7 @@ ggplot(total_abundance,
   
   theme_classic()
 ```
+When taxa are combined, a clearer negative relationship emerges.
 
 ```{r}
 cor.test(
@@ -505,6 +511,18 @@ ggplot(total_abundance,
   
   theme_classic() +
   theme(legend.position = "none")
+```
+Community abundance varies continuously rather than discretely across DO levels.
+
+```{r}
+# Pearson correlation for continuous DO and total community abundance
+cor.test(total_abundance$log_total_abundance,
+         total_abundance$med_do,
+         method = "pearson")
+
+# Kruskal-Wallis test comparing abundance across DO categories
+kruskal.test(log_total_abundance ~ do_category,
+             data = total_abundance)
 ```
 
 
