@@ -31,6 +31,10 @@ library(naniar)
 # arrange plots
 library(patchwork)
 
+library(dplyr)     # data manipulation
+library(broom)     # tidy statistical output
+library(corrplot)
+
 ```
 
 
@@ -171,7 +175,7 @@ focus_taxa <- c("Ostracod", "Copepod", "Cladocera",
 ```{r}
 #| label: wrangle_data
 
-# create object sal_taxa from aq_ins_clean
+# create object DO_taxa from aq_ins_clean
 DO_taxa <- aq_ins_clean |> 
   # remove rows that are missing median salinity values
   filter(!is.na(med_do)) |> 
@@ -364,5 +368,129 @@ abundance_time_plot <- ggplot(data = abundance_time,
 
 # show plot
 abundance_time_plot
+```
+
+# correlation analysis
+
+```{r}
+# create wide dataset (one column per taxon)
+taxa_wide <- DO_taxa |>
+  select(date, site, taxon, log_ave_lit, med_do) |>
+  pivot_wider(
+    names_from = taxon,
+    values_from = log_ave_lit
+  )
+
+# calculate correlation of each taxon with dissolved oxygen
+cor_do <- taxa_wide |>
+  select(-date, -site) |>
+  summarize(across(-med_do, ~ cor(.x, med_do, use = "complete.obs"))) |>
+  pivot_longer(
+    cols = everything(),
+    names_to = "taxon",
+    values_to = "correlation"
+  )
+
+ggplot(cor_do, aes(x = taxon, y = "Dissolved oxygen", fill = correlation)) +
+  geom_tile(color = "grey70") +
+  geom_point(aes(size = abs(correlation)), shape = 21, fill = "white") +
+  
+  # move labels ABOVE circles
+  geom_text(aes(label = round(correlation, 2)),
+            nudge_y = 0.15,  # <-- this moves text up
+            size = 4) +
+  
+  scale_fill_gradient2(
+    low = "red",
+    mid = "white",
+    high = "blue",
+    midpoint = 0,
+    limits = c(-1, 1),
+    name = "r"
+  ) +
+  scale_size(range = c(2, 10), guide = "none") +
+  labs(
+    x = "Taxon",
+    y = NULL,
+    title = "Correlation between dissolved oxygen and invertebrate abundance"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+```
+# Summed abundance across focus taxa vs DO
+```{r}
+focus_taxa <- c("Cladocera", "Copepod", 
+                "Hemiptera Corixidae Boatman", 
+                "Nematode", "Ostracod")
+
+total_abundance <- DO_taxa |>
+  filter(taxon %in% focus_taxa) |>
+  group_by(date, site, med_do) |>
+  summarize(
+    total_abundance = sum(ave_lit, na.rm = TRUE),
+    log_total_abundance = log10(total_abundance + 1),
+    .groups = "drop"
+  )
+ggplot(total_abundance,
+       aes(x = med_do,
+           y = log_total_abundance)) +
+  
+  geom_point(color = "magenta3",
+             size = 3,
+             alpha = 0.7) +
+  
+  
+  labs(
+    x = "Dissolved oxygen (mg/L)",
+    y = "Log total invertebrate abundance",
+    title = "Relationship between dissolved oxygen and total invertebrate abundance"
+  ) +
+  
+  theme_classic()
+```
+
+```{r}
+cor.test(
+  total_abundance$log_total_abundance,
+  total_abundance$med_do,
+  method = "pearson"
+)
+```
+
+# Binned DO levels
+```{r}
+ggplot(total_abundance,
+       aes(x = do_category,
+           y = log_total_abundance,
+           fill = do_category)) +
+  
+  geom_boxplot(alpha = 0.7,
+               outlier.color = "black",
+               outlier.size = 2) +
+  
+  # optional: add jittered points to show raw data
+  geom_jitter(width = 0.15,
+              alpha = 0.5,
+              size = 2,
+              color = "black") +
+  
+  labs(
+    x = "Dissolved oxygen level",
+    y = "Log total invertebrate abundance",
+    title = "Invertebrate abundance across dissolved oxygen levels"
+  ) +
+  
+  scale_fill_manual(values = c(
+    "Low DO" = "red3",
+    "Medium DO" = "grey60",
+    "High DO" = "blue3"
+  )) +
+  
+  theme_classic() +
+  theme(legend.position = "none")
 ```
 
