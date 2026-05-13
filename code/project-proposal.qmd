@@ -526,3 +526,45 @@ kruskal.test(log_total_abundance ~ do_category,
 ```
 
 
+```{r}
+composition_plot <- DO_taxa |>
+  mutate(
+    do_category = case_when(
+      med_do <= quantile(med_do, 0.33, na.rm = TRUE) ~ "Low DO",
+      med_do <= quantile(med_do, 0.66, na.rm = TRUE) ~ "Medium DO",
+      TRUE ~ "High DO"
+    ),
+
+    # reorder factor levels
+    do_category = factor(do_category,
+                         levels = c("Low DO",
+                                    "Medium DO",
+                                    "High DO"))
+  ) |>
+  group_by(do_category, taxon) |>
+  summarize(
+    total_abundance = sum(ave_lit, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  ggplot(aes(x = do_category,
+             y = total_abundance,
+             fill = taxon)) +
+
+  geom_col(position = "fill") +
+
+  scale_y_continuous(labels = scales::percent_format()) +
+
+  labs(
+    x = "Dissolved oxygen category",
+    y = "Relative community composition",
+    fill = "Taxon",
+    title = "Invertebrate community composition shifts across dissolved oxygen levels"
+  ) +
+
+  theme_classic()
+
+composition_plot
+```
+
+Medium DO sites show a more even distribution of taxa and greater relative abundance of Cladocera and Ostracods, while low and high DO conditions are dominated primarily by Copepods.
+
