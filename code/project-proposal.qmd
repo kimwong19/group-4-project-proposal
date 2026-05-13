@@ -463,6 +463,19 @@ cor.test(
 
 # Binned DO levels
 ```{r}
+total_abundance <- total_abundance |>
+  mutate(
+    do_category = case_when(
+      med_do <= quantile(med_do, 0.33, na.rm = TRUE) ~ "Low DO",
+      med_do <= quantile(med_do, 0.66, na.rm = TRUE) ~ "Medium DO",
+      TRUE ~ "High DO"
+    )
+  )
+total_abundance$do_category <- factor(
+  total_abundance$do_category,
+  levels = c("Low DO", "Medium DO", "High DO")
+)
+
 ggplot(total_abundance,
        aes(x = do_category,
            y = log_total_abundance,
@@ -493,4 +506,5 @@ ggplot(total_abundance,
   theme_classic() +
   theme(legend.position = "none")
 ```
+
 
