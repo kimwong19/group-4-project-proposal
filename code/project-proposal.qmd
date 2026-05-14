@@ -34,6 +34,7 @@ library(patchwork)
 library(dplyr)     # data manipulation
 library(broom)     # tidy statistical output
 library(corrplot)
+library(stringr)
 
 ```
 
@@ -270,6 +271,12 @@ DO <- ggplot(data = aq_ins_clean_fig2,
 
 # show plot
 DO
+```
+
+```{r}
+#| label: do-vs-sites-distribution
+#| fig-width: 10
+#| fig-height: 8
 
 # assign quartiles for medians for each site
 median_fig2$quartile <- cut(median_fig2$median_DO,
@@ -293,19 +300,21 @@ ggplot(median_fig2, aes(x = median_DO)) +
              linetype = "dashed",
              color = "gray40") +
   # site labels
-  geom_text(aes(y = -0.03,
-                label = site_full,
+  geom_text(aes(y = 0.01,
+                label = str_wrap(site_full, width = 10),
                 color = quartile),
-            hjust = 1,
-            size = 4) +
+            hjust = 0.5,
+            size = 3) +
+  # remove space between bottom of plot and y-axis, set y-axis limits
+  scale_y_continuous(expand = c(0,0),
+                     limits = c(0, 0.15)) +
   # axes labels and title
   labs(x = "Median Dissolved Oxygen (mg/L)",
        y = "Density",
-       title = "Distribution of Median Dissolved Oxygen Aross Sites") +
+       title = "Distribution of Median Dissolved Oxygen Aross Sites",
+       color = "Quartile") +
   # theme
   theme_bw()
-
-
 ```
 
 # Figure 3: Aquatic Invert. Abundance Across Sites
