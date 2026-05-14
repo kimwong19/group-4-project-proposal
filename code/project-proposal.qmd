@@ -224,8 +224,58 @@ DO_taxa_plot
 ```
 shows that individual taxa have noisy, weak, or inconsistent relationships with DO.
 
+# Figure 2: Aquatic Invert. Abundance Across Sites
+```{r}
+#| label: cleaning for figure 3
+#| message: false
+#| warning: false
+# creating new object from clean aquatic inverts 
+abundance_by_site <- aq_ins_clean |> 
+  # log + 1 transform mean abundance per liter
+  mutate(log_ave_lit = log(ave_lit + 1)) |>
+  # convert taxon to title case
+  mutate(taxon = str_replace_all(taxon, "_", " "),
+         taxon = str_to_title(taxon)) |> 
+  # filter to include taxa of interest
+  filter(taxon %in% focus_taxa)
+```
 
-# Figure 2: Variance of DO across sites
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+# base layer
+
+abundance <- ggplot(data = abundance_by_site,
+                   # x-axis: site
+                   # y-axis: mean abundance/L
+                   # color by taxon
+                   mapping = aes(x = site_full,
+                                 y = log_ave_lit, 
+                                 color = taxon)) +
+  # first layer: jitter points to represent observations
+  geom_jitter(width = 0.15,
+              height = 0,
+              alpha = 0.7) +
+  # facet by taxon
+  facet_wrap(~ taxon) +
+  # wrapping x-axis text
+  scale_x_discrete(labels = label_wrap(15)) +
+  # non-default colors
+  scale_color_viridis_d() +
+  # relabelling x- and y-axis, adding title
+  labs(x = "Site",
+       y = "log + 1 transformed average abundance/L",
+       title = "Aquatic Invert. Abundance Across Sites") +
+  theme_bw() +
+  # remove legend
+  theme(legend.position = 'none',
+        # fix x-axis for readability
+        axis.text.x = element_text(angle = 45, hjust = 1)) 
+
+abundance
+```
+
+# Figure 3: Variance of DO across sites
 ```{r}
 #| fig-width: 10
 #| fig-height: 8
@@ -271,6 +321,7 @@ DO <- ggplot(data = aq_ins_clean_fig2,
 DO
 ```
 
+# Figure 4: DO Bins Across Sites
 ```{r}
 #| label: do-vs-sites-bins
 #| fig-width: 10
@@ -324,6 +375,7 @@ Low DO: Phelps Road and North of Phelps Bridge
 Moderate DO: South of Venoco Bridge, South of Phelps Bridge, Devereux Creek
 High DO: North of Venoco Bridge, Main Channel
 
+# Figure 5: Invertebrate Abundance in DO Bins
 ```{r}
 #| label: invert-abundance-at-bins
 
@@ -370,57 +422,7 @@ ins_bins_plot
 From this figure, it looks like cladocera, copepods, boatmans, and ostracods all prefer moderate levels of DO. Nematodes don't appear to have a preference, but their abundance is low throughout so there might just not be enough to tell.
 
 
-# Figure 3: Aquatic Invert. Abundance Across Sites
-```{r}
-#| label: cleaning for figure 3
-#| message: false
-#| warning: false
-# creating new object from clean aquatic inverts 
-abundance_by_site <- aq_ins_clean |> 
-  # log + 1 transform mean abundance per liter
-  mutate(log_ave_lit = log(ave_lit + 1)) |>
-  # convert taxon to title case
-  mutate(taxon = str_replace_all(taxon, "_", " "),
-         taxon = str_to_title(taxon)) |> 
-  # filter to include taxa of interest
-  filter(taxon %in% focus_taxa)
-```
-
-```{r}
-#| fig-width: 10
-#| fig-height: 8
-# base layer
-
-abundance <- ggplot(data = abundance_by_site,
-                   # x-axis: site
-                   # y-axis: mean abundance/L
-                   # color by taxon
-                   mapping = aes(x = site_full,
-                                 y = log_ave_lit, 
-                                 color = taxon)) +
-  # first layer: jitter points to represent observations
-  geom_jitter(width = 0.15,
-              height = 0,
-              alpha = 0.7) +
-  # facet by taxon
-  facet_wrap(~ taxon) +
-  # wrapping x-axis text
-  scale_x_discrete(labels = label_wrap(15)) +
-  # non-default colors
-  scale_color_viridis_d() +
-  # relabelling x- and y-axis, adding title
-  labs(x = "Site",
-       y = "log + 1 transformed average abundance/L",
-       title = "Aquatic Invert. Abundance Across Sites") +
-  theme_bw() +
-  # remove legend
-  theme(legend.position = 'none',
-        # fix x-axis for readability
-        axis.text.x = element_text(angle = 45, hjust = 1)) 
-
-abundance
-```
-# Figure 4: Abundance over time
+# Abundance over time (might change up this figure or not include)
 
 ```{r}
 #| label: invert-abundance-time
@@ -475,7 +477,7 @@ abundance_time_plot <- ggplot(data = abundance_time,
 abundance_time_plot
 ```
 
-# correlation analysis
+# Figure 6: correlation 1
 
 ```{r}
 # create wide dataset (one column per taxon)
@@ -526,7 +528,8 @@ ggplot(cor_do, aes(x = taxon, y = "Dissolved oxygen", fill = correlation)) +
   )
 
 ```
-# Summed abundance across focus taxa vs DO
+
+# Fiugre 7: Summed abundance across focus taxa vs DO
 ```{r}
 focus_taxa <- c("Cladocera", "Copepod", 
                 "Hemiptera Corixidae Boatman", 
@@ -628,6 +631,7 @@ kruskal.test(log_total_abundance ~ do_category,
              data = total_abundance)
 ```
 
+# Figure 8: Composition plot
 
 ```{r}
 composition_plot <- DO_taxa |>

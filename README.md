@@ -84,6 +84,11 @@ DO and Abundance Correlation
 DO and Abundance Correlation 2
 <img width="1474" height="1604" alt="abundance-vs-do-correlation-2" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/abundance-vs-do-correlation-2.png" />
 
+**Potential figure 8:**
+
+Community composition plot
+<img width="1474" height="1604" alt="composition-plot" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/composition-plot.png" />
+
 ## Data cleaning/wrangling/summarizing plan
 
 To clean the data, we will filter to only include quarterly surveys at NCOS and filtered beaker samples, select columns of interest, clean column names, remove outliers, and join data frames. Our data summarizing steps will include calculating median dissolved oxygen levels and average abundance per liter.  
