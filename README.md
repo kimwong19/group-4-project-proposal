@@ -52,24 +52,26 @@ Invertebrates & Dissolved oxygen
 **Potential figure 1:**
 
 Abundance vs. DO
-<img width="706" height="467" alt="DO_vs_Abundance" src="https://github.com/user-attachments/assets/a28cf695-ee85-4d25-a615-96f4411e1821" />
+<img width="706" height="467" alt="abundance-vs-do" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/abundance-vs-do.png" />
 
 **Potential figure 2:**
 
 Invertebrate abundance vs. Site
-<img width="738" height="465" alt="Aquatic_Invert _Abundance_Across_Sites" src="https://github.com/user-attachments/assets/4ab8f8fe-bf36-4203-bb81-3d56dae53537" />
+<img width="738" height="465" alt="abundance-across-sites" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/abundance-across-sites.png" />
 
 **Potential figure 3:**
 
 DO vs. Site
-<img width="703" height="473" alt="DO_levles_by site" src="https://github.com/user-attachments/assets/6f749a4f-bf59-4362-a40b-0bf4ced0681e" />
+<img width="703" height="473" alt="site-vs-do" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/site-vs-DO.png" />
 
 
-**Potential figure 4**
+**Potential figures 4 and 5**
 
-Abundance over time
+DO and abundance correlation
 
-<img width="1474" height="1604" alt="abundance_time_plot" src="https://github.com/user-attachments/assets/98b06166-f8f6-486b-8b22-1bfdd99b2a9e" />
+<img width="1474" height="1604" alt="abundance-vs-DO-correlation" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/abundance-vs-DO-correlation.png" />
+
+<img width="1474" height="1604" alt="abundance-vs-do-correlation-2" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/abundance-vs-do-correlation-2.png" />
 
 ## Data cleaning/wrangling/summarizing plan
 
