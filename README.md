@@ -64,12 +64,24 @@ Invertebrate abundance vs. Site
 DO vs. Site
 <img width="703" height="473" alt="site-vs-do" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/site-vs-DO.png" />
 
+**Potential figure 4:**
 
-**Potential figures 4 and 5:**
+DO Distribution Across Sites
+<img width="703" height="473" alt="do-distribution" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/do-distribution.png" />
 
-DO and abundance correlation
+**Potential figure 5:**
+
+Invertebrate Abundance vs. DO Bins
+<img width="703" height="473" alt="abundance-vs-do-bins" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/abundance-vs-do-bins.png" />
+
+**Potential figure 6:**
+
+DO and Abundance Correlation
 <img width="1474" height="1604" alt="abundance-vs-DO-correlation" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/abundance-vs-DO-correlation.png" />
 
+**Potential figure 7:**
+
+DO and Abundance Correlation 2
 <img width="1474" height="1604" alt="abundance-vs-do-correlation-2" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/abundance-vs-do-correlation-2.png" />
 
 ## Data cleaning/wrangling/summarizing plan
