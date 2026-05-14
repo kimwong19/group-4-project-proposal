@@ -33,8 +33,7 @@ library(patchwork)
 
 library(dplyr)     # data manipulation
 library(broom)     # tidy statistical output
-library(corrplot)
-library(stringr)
+library(stringr)   # distribution plot
 
 ```
 
@@ -105,7 +104,6 @@ water_quality_clean <- water_quality |>
   # filter out salinity outliers
   filter(date_site != "2022-08-12_NVBR") 
 ```
-
 ## Cleaning `aq_ins`
 ```{r}
 #| label: cleaning-aq-ins
@@ -227,7 +225,7 @@ DO_taxa_plot
 shows that individual taxa have noisy, weak, or inconsistent relationships with DO.
 
 
-# Figure 2: Variance of DO across sights
+# Figure 2: Variance of DO across sites
 ```{r}
 #| fig-width: 10
 #| fig-height: 8
@@ -274,22 +272,27 @@ DO
 ```
 
 ```{r}
-#| label: do-vs-sites-distribution
+#| label: do-vs-sites-bins
 #| fig-width: 10
 #| fig-height: 8
 
+# create new object to store medians of median do levels
+median_fig2 <- aq_ins_clean_fig2 |> 
+  group_by(site_full) |> 
+  summarize(median_do = median(med_do, na.rm = TRUE))
+
 # assign quartiles for medians for each site
-median_fig2$quartile <- cut(median_fig2$median_DO,
-                   breaks = quantile(median_fig2$median_DO,
+median_fig2$quartile <- cut(median_fig2$median_do,
+                   breaks = quantile(median_fig2$median_do,
                                      probs = seq(0, 1, 0.25)),
                    include.lowest = TRUE,
                    labels = c("Q1","Q2","Q3","Q4"))
 
 # boundaries of quartiles
-q <- quantile(median_fig2$median_DO, probs = c(0.25, 0.5, 0.75))
+q <- quantile(median_fig2$median_do, probs = c(0.25, 0.5, 0.75))
 
 # distribution plot of DO levels across sites
-ggplot(median_fig2, aes(x = median_DO)) +
+ggplot(median_fig2, aes(x = median_do)) +
   # density curve
   geom_density(fill = "lightblue",
                alpha = 0.4,
@@ -316,10 +319,60 @@ ggplot(median_fig2, aes(x = median_DO)) +
   # theme
   theme_bw()
 ```
+BINS
+Low DO: Phelps Road and North of Phelps Bridge
+Moderate DO: South of Venoco Bridge, South of Phelps Bridge, Devereux Creek
+High DO: North of Venoco Bridge, Main Channel
+
+```{r}
+#| label: invert-abundance-at-bins
+
+aq_ins_clean_bins <-  aq_ins_clean |> 
+  mutate(bins = case_when(site_full == "Phelps Road" ~ "low",
+                             site_full == "North of Phelps Bridge" ~ "low", 
+                             site_full == "South of Venoco Bridge" ~ "moderate",
+                             site_full == "South of Phelps Bridge" ~ "moderate",
+                             site_full =="Devereux Creek" ~ "moderate",
+                             site_full =="North of Venoco Bridge" ~ "high",
+                             site_full == "Main Channel" ~ "high")) |> 
+  mutate(taxon = str_replace_all(taxon, "_", " "), taxon = str_to_title(taxon)) |>
+  filter(taxon %in% focus_taxa) |>
+  # create column that calculates log-transformed abundance
+  mutate(log_ave_lit = log(ave_lit + 1)) |> 
+  mutate(bins = factor(bins, levels = c("low", "moderate", "high")))
+  
+
+# base layer: ggplot
+ins_bins_plot <- ggplot(data = aq_ins_clean_bins, 
+                        mapping = aes(x = bins, # x-axis: DO bins
+                                      y = log_ave_lit, # y-axis: log_ave_lit
+                                      color = taxon)) + # color by taxon
+  # first layer: points show individual abundance measurements 
+  geom_point(shape = 16, # shape is circle
+             size = 2, # size is 2
+             alpha = 0.7) + # opacity is 0.7
+  # separate panels for each taxon 
+  facet_wrap(~ taxon) +
+  # use non-default colors for points
+  scale_color_viridis_d() +
+  labs(x = "DO levels", # relabel x-axis
+       y = "log + 1 transformed average abundance/L", # relabel y-axis
+       # creates descriptive title
+       title = "Invertebrate abundance vs DO levels") +
+  # uses non-default theme
+  theme_bw() +
+  # remove redundant legend
+  theme(legend.position = "none")
+
+# shows plot
+ins_bins_plot
+```
+From this figure, it looks like cladocera, copepods, boatmans, and ostracods all prefer moderate levels of DO. Nematodes don't appear to have a preference, but their abundance is low throughout so there might just not be enough to tell.
+
 
 # Figure 3: Aquatic Invert. Abundance Across Sites
 ```{r}
-#| label: cleanign for figure 3
+#| label: cleaning for figure 3
 #| message: false
 #| warning: false
 # creating new object from clean aquatic inverts 
