@@ -65,10 +65,9 @@ DO vs. Site
 <img width="703" height="473" alt="site-vs-do" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/site-vs-DO.png" />
 
 
-**Potential figures 4 and 5**
+**Potential figures 4 and 5:**
 
 DO and abundance correlation
-
 <img width="1474" height="1604" alt="abundance-vs-DO-correlation" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/abundance-vs-DO-correlation.png" />
 
 <img width="1474" height="1604" alt="abundance-vs-do-correlation-2" src="https://github.com/kimwong19/group-4-project-proposal/blob/main/code/abundance-vs-do-correlation-2.png" />
